@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckCircleIcon, CircleIcon, MapIcon, MapPin } from "lucide-react";
+import { CheckCircleIcon, CircleIcon, MapPin } from "lucide-react";
+import { motion } from "motion/react";
 
 interface TimelineEvent {
   id: string;
@@ -45,14 +46,35 @@ export function Timeline({ events = [] }: TimelineProps) {
   );
 
   return (
-    <div className="p-6">
+    <motion.div
+      className="p-6"
+      variants={{
+        hidden: {},
+        show: {
+          transition: {
+            staggerChildren: 0.12,
+          },
+        },
+      }}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
+    >
       <div className="space-y-6">
         {sortedEvents.map((event, index) => {
           const isLast = index === sortedEvents.length - 1;
-          const isLatest = index === 0;
+          const isLatest = index === sortedEvents.length - 1;
 
           return (
-            <div key={event.id} className="flex gap-4">
+            <motion.div
+              key={event.id}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.4 }}
+              className="flex gap-4"
+            >
               <div className="flex flex-col items-center">
                 {event.completed ? (
                   <CheckCircleIcon
@@ -63,8 +85,12 @@ export function Timeline({ events = [] }: TimelineProps) {
                 )}
 
                 {!isLast && (
-                  <div
-                    className={`w-0.5 h-12 mt-2 ${
+                  <motion.div
+                    initial={{ scaleY: 0 }}
+                    whileInView={{ scaleY: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.35, delay: 0.1 }}
+                    className={`w-0.5 h-12 mt-2 origin-top ${
                       event.completed ? "bg-primary/30" : "bg-border"
                     }`}
                   />
@@ -87,9 +113,7 @@ export function Timeline({ events = [] }: TimelineProps) {
                     </p>
 
                     <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                      <span className="font-medium">
-                        <MapPin className="size-4 text-amber-500" />
-                      </span>
+                      <MapPin className="size-4 text-amber-500" />
                       {event.location}
                     </p>
                   </div>
@@ -99,10 +123,10 @@ export function Timeline({ events = [] }: TimelineProps) {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 }

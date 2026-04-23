@@ -1,15 +1,18 @@
+"use client";
+
+import { motion } from "motion/react";
 import { Timeline } from "./timeline";
 import { TrackingCard } from "./tracking-card";
 
 export const TrackingResult = () => {
   const trackingData = {
-    trackingId: "SHP-2024-001",
-    status: "in-transit" as const,
+    trackingId: "TS-YHSIDGSM",
+    status: "in_transit" as const,
     sender: "Acme Industries",
     receiver: "Tech Solutions Inc.",
     origin: "Los Angeles, CA",
     destination: "New York, NY",
-    deliveryDate: "March 28, 2024",
+    deliveryDate: "28 March 2024",
   };
 
   const timelineEvents = [
@@ -18,7 +21,7 @@ export const TrackingResult = () => {
       title: "Package Picked Up",
       description: "Your shipment has been collected from the sender location.",
       location: "Los Angeles, CA",
-      timestamp: "2024-03-24 09:30 AM",
+      timestamp: "2024-03-24T09:30:00",
       completed: true,
     },
     {
@@ -26,7 +29,7 @@ export const TrackingResult = () => {
       title: "In Transit",
       description: "Your package is on the way to the distribution center.",
       location: "Phoenix Distribution Hub",
-      timestamp: "2024-03-25 02:15 PM",
+      timestamp: "2024-03-25T14:15:00",
       completed: true,
     },
     {
@@ -34,7 +37,7 @@ export const TrackingResult = () => {
       title: "At Distribution Center",
       description: "Package received at our distribution facility.",
       location: "Dallas, TX",
-      timestamp: "2024-03-26 08:45 AM",
+      timestamp: "2024-03-26T08:45:00",
       completed: true,
     },
     {
@@ -42,7 +45,7 @@ export const TrackingResult = () => {
       title: "Out for Delivery",
       description: "Your package is on the delivery truck.",
       location: "New York, NY",
-      timestamp: "2024-03-27 06:30 AM",
+      timestamp: "2024-03-27T06:30:00",
       completed: false,
     },
     {
@@ -50,31 +53,49 @@ export const TrackingResult = () => {
       title: "Delivered",
       description: "Package successfully delivered.",
       location: "New York, NY",
-      timestamp: "Expected 2024-03-28",
+      timestamp: "2024-03-28T00:00:00",
       completed: false,
     },
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-secondary/5">
+    <section className="py-16 md:py-24 bg-secondary/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12 text-center"
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Track Your Shipment
           </h2>
           <p className="text-muted-foreground">
             Real-time updates on your package with detailed location history
           </p>
-        </div>
+        </motion.div>
 
-        {/* Tracking Card and Timeline */}
         <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="lg:col-span-1"
+          >
             <TrackingCard {...trackingData} />
-          </div>
-          <div className="lg:col-span-2">
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="lg:col-span-2"
+          >
             <Timeline events={timelineEvents} />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

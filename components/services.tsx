@@ -2,6 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { TruckIcon, ShieldIcon, ClockIcon, BarChart3Icon } from "lucide-react";
+import { motion } from "motion/react";
 
 export function Services() {
   const services = [
@@ -34,7 +35,14 @@ export function Services() {
   return (
     <section id="services" className="py-16 md:py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        {/* HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Our Services
           </h2>
@@ -42,27 +50,59 @@ export function Services() {
             Comprehensive logistics solutions designed to meet all your shipping
             needs with professional excellence.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* CARDS */}
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={{
+            hidden: {},
+            show: {
+              transition: {
+                staggerChildren: 0.15,
+              },
+            },
+          }}
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {services.map((service, index) => {
             const Icon = service.icon;
+
             return (
-              <Card
+              <motion.div
                 key={index}
-                className="p-6 hover:shadow-lg transition-shadow border-border hover:border-primary/30"
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  show: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5 }}
+                whileHover={{ y: -6 }}
               >
-                <Icon className="w-10 h-10 text-primary mb-4" />
-                <h3 className="font-bold text-lg text-foreground mb-2">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {service.description}
-                </p>
-              </Card>
+                <Card className="p-6 border-border hover:border-primary/30 transition-all duration-300 group">
+                  {/* ICON */}
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 3 }}
+                    className="mb-4"
+                  >
+                    <Icon className="w-10 h-10 text-primary group-hover:text-primary/80 transition-colors" />
+                  </motion.div>
+
+                  {/* TITLE */}
+                  <h3 className="font-bold text-lg text-foreground mb-2">
+                    {service.title}
+                  </h3>
+
+                  {/* DESCRIPTION */}
+                  <p className="text-sm text-muted-foreground">
+                    {service.description}
+                  </p>
+                </Card>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
