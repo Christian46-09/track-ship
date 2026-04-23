@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+enum ShipmentStatus {
+  pending
+  confirmed
+  picked_up
+  in_transit
+  arrived_at_hub
+  out_for_delivery
+  delivered
+  delayed
+  cancelled
+}
+
+enum ServiceType {
+  economy
+  standard
+  express
+  premium
+}
+
+enum CarrierType {
+  DHL
+  UPS
+  FedEx
+}
+
+model Shipment {
+  id                    String           @id @default(cuid())
+  trackingNumber        String           @unique
+  senderName            String
+  senderAddress         String
+  senderPhone           String
+  receiverName          String
+  receiverAddress       String
+  receiverPhone         String
+  origin                String
+  destination           String
+  currentLocation       String?
+  weight                Float
+  cost                  Float
+  serviceType           ServiceType
+  status                ShipmentStatus
+  carrier               CarrierType
+  estimatedDeliveryDate DateTime
+  actualDeliveryDate    DateTime?
+  description           String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  history               ShipmentHistory[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ShipmentHistory {
+  id          String         @id @default(cuid())
+  shipmentId  String
+  status      ShipmentStatus
+  title       String
+  description String
+  location    String
+  notes       String?
+  timestamp   DateTime       @default(now())
+  completed   Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+
+  shipment    Shipment       @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  @@index([shipmentId])
+  @@index([status])
+  @@index([timestamp])
+}
