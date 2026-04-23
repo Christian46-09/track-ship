@@ -8,7 +8,7 @@ const TrackingDetailsPage = async ({
   const { trackId } = await params;
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-background">
       <TrackDetails trackId={trackId} />
     </div>
   );
